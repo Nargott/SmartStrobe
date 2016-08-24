@@ -1,0 +1,25 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "cordova-plugin-bluetooth-serial": {
+            "PACKAGE_NAME": "com.nargott.smartstrobe"
+        },
+        "cordova-plugin-console": {
+            "PACKAGE_NAME": "com.nargott.smartstrobe"
+        }
+    },
+    "dependent_plugins": {
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "com.nargott.smartstrobe"
+        },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "com.nargott.smartstrobe"
+        }
+    }
+}

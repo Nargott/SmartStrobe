@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<script id="tinyhippos-injected">if (window.top.ripple) {
+	window.top.ripple("bootstrap").inject(window, document);
+}</script>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>SmartStrobe</title>
+	<link rel="stylesheet" href="./css/jquery-ui.css">
+	<link rel="stylesheet" href="./css/bootstrap.min.css">
+	<link rel="stylesheet" href="./css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="./css/metro.css">
+	<link rel="stylesheet" href="./css/style.css">
+	<script src="./js/jquery-1.12.4.js"></script>
+	<script src="./js/jquery-ui.js"></script>
+	<script src="./js/bootstrap.min.js"></script>
+	<script src="./js/jquery.ui.touch-punch.min.js"></script>
+	<script src="./js/metro.js"></script>
+	<script type="text/javascript" src="cordova.js"></script>
+	<script>
+		/*$(function () {
+		 $("#slider-vertical").slider({
+		 orientation: "vertical",
+		 range: "min",
+		 min: 100,
+		 max: 250,
+		 value: 120,
+		 step: 10,
+		 slide: function (event, ui) {
+		 $("#amount").val(ui.value);
+		 },
+		 stop: function (event, ui) {
+		 console.log(ui.value);
+		 }
+		 });
+		 $("#amount").val($("#slider-vertical").slider("value"));
+		 });
+		 function changeStep() {
+		 $("#isStep").is(':checked') ? $("#slider-vertical").slider({
+		 step: 5
+		 }) : $("#slider-vertical").slider({
+		 step: 1
+		 })
+		 }*/
+		var lastState = 0;
+		const MAC = "00:14:03:05:62:F7";
+		function sliderChange(value) {
+			if (lastState != value) {
+				lastState = value;
+				console.log(value);
+			}
+		}
+		function toggleLight(value) {
+			console.log(value);
+		}
+		function connectToDevice() {
+			bluetoothSerial.enable(
+				function() {
+					$("#connectWindow").append("<h3>Bluetooth is enabled</h3>");
+				},
+				function() {
+					$("#connectWindow").append("<h3>The user did *not* enable Bluetooth</h3>");
+				}
+			);
+
+			bluetoothSerial.list(function(devices) {
+				devices.forEach(function(device) {
+					//console.log(device.id);
+					$("#connectWindow").append("<h3>"+device.id+"</h3>");
+				})
+			});
+
+			bluetoothSerial.connect(MAC, function() {
+				$("#connectWindow").append("<h3>Connected!</h3>");
+				$("#connectWindow").hide();
+				$("#mainTabs").show();
+			}, function() {
+				$("#connectWindow").append("<h3>Can't connect :-(</h3>");
+			});
+		}
+	</script>
+</head>
+<body style="height:100%">
+<div id="connectWindow" class="connectWindow">
+	<button class="button success block-shadow-success text-shadow connectButton" onclick="connectToDevice()">
+		Connect
+	</button>
+</div>
+<div id="mainTabs" class="tabcontrol" data-role="tabcontrol" style="height: 90%; display: none;">
+	<ul class="tabs">
+		<li class="active">
+			<a href="#1a" data-toggle="tab">Main</a>
+		</li>
+		<li>
+			<a href="#2a" data-toggle="tab">BPM</a>
+		</li>
+		<li><a href="#3a" data-toggle="tab">Delay</a>
+		</li>
+		<li><a href="#4a" data-toggle="tab">Etc</a>
+		</li>
+	</ul>
+
+	<div class="frames active" style="height: 100%;">
+		<div class="frame" id="1a">
+			<div class="grid">
+				<div class="row cells1">
+					<div class="cell" style="align-content: center;">
+						<h4 class="control">On/Off static light: </h4>
+						<br>
+						<label class="switch control">
+							<input type="checkbox" onchange="toggleLight(this.checked)">
+							<span class="check"></span>
+						</label>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="frame" id="2a" style="height: 85%; overflow: hidden !important;">
+			<div class="top-label">
+				<label for="amount" style="border:0; color:#fff;">BPM:</label>
+				<input type="text" id="amount" readonly=""
+				       style="border:0; color:#f6931f; background: transparent; font-weight:bold; width: 50px;">
+			</div>
+			<div class="slider ani vertical centered"
+			     data-position="60"
+			     data-role="slider"
+			     data-max-value="250"
+			     data-min-value="100"
+			     data-buffer="10"
+			     data-target="#amount"
+			     data-marker-color="marker-big"
+			     data-accuracy="0"
+			     data-colors="red, yellow, green, blue"
+			     data-vertical="true"
+			     data-on-change="sliderChange">
+			</div>
+		</div>
+		<div class="tab-pane" id="3a" style="height: 85%; overflow: hidden !important;">
+			<div class="top-label">
+				<label for="delay" style="border:0; color:#fff;">Delay:</label>
+				<input type="text" id="delay" readonly=""
+				       style="border:0; color:#f6931f; background: transparent; font-weight:bold; width: 50px;">
+			</div>
+			<div class="slider ani vertical centered"
+			     data-position="60"
+			     data-role="slider"
+			     data-max-value="250"
+			     data-min-value="10"
+			     data-buffer="10"
+			     data-target="#delay"
+			     data-marker-color="marker-big"
+			     data-accuracy="0"
+			     data-colors="red, yellow, green, blue"
+			     data-vertical="true"
+			     data-on-change="sliderChange">
+			</div>
+		</div>
+		<div class="tab-pane" id="4a">
+			<h3>Nothing here yet</h3>
+		</div>
+	</div>
+
+</div>

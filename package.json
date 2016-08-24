@@ -1,0 +1,21 @@
+{
+  "name": "smart-strobe",
+  "version": "0.0.2",
+  "description": "> SmartStrobe by Nargott",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "Nargott",
+  "license": "Apache-2.0.0",
+  "keywords": [
+    "ecosystem:phonegap",
+    "ecosystem:cordova",
+    "cordova:template",
+    "phonegap:template"
+  ],
+  "bugs": {
+    "url": ""
+  },
+  "homepage": ""
+}
