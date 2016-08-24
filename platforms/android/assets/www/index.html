@@ -46,37 +46,62 @@
 		 }*/
 		var lastState = 0;
 		const MAC = "00:14:03:05:62:F7";
-		function sliderChange(value) {
+		var data = new Uint8Array(2);
+		function sliderChangeBPM(value) {
 			if (lastState != value) {
+				data[0] = 0x01;
+				data[1] = value;
+				bluetoothSerial.write(data, function () {
+					console.log("Sucess!");
+				}, function () {
+					console.log("Error!");
+				});
 				lastState = value;
-				console.log(value);
+			}
+		}
+		function sliderChangeDelay(value) {
+			if (lastState != value) {
+				data[0] = 0x02;
+				data[1] = value;
+				bluetoothSerial.write(data, function () {
+					console.log("Sucess!");
+				}, function () {
+					console.log("Error!");
+				});
+				lastState = value;
 			}
 		}
 		function toggleLight(value) {
-			console.log(value);
+			data[0] = 0x00;
+			data[1] = value ? 0x01 : 0x00;
+			bluetoothSerial.write(data, function () {
+				console.log("Sucess!");
+			}, function () {
+				console.log("Error!");
+			});
 		}
 		function connectToDevice() {
 			bluetoothSerial.enable(
-				function() {
+				function () {
 					$("#connectWindow").append("<h3>Bluetooth is enabled</h3>");
 				},
-				function() {
+				function () {
 					$("#connectWindow").append("<h3>The user did *not* enable Bluetooth</h3>");
 				}
 			);
 
-			bluetoothSerial.list(function(devices) {
-				devices.forEach(function(device) {
+			bluetoothSerial.list(function (devices) {
+				devices.forEach(function (device) {
 					//console.log(device.id);
-					$("#connectWindow").append("<h3>"+device.id+"</h3>");
+					$("#connectWindow").append("<h3>" + device.id + "</h3>");
 				})
 			});
 
-			bluetoothSerial.connect(MAC, function() {
+			bluetoothSerial.connect(MAC, function () {
 				$("#connectWindow").append("<h3>Connected!</h3>");
 				$("#connectWindow").hide();
 				$("#mainTabs").show();
-			}, function() {
+			}, function () {
 				$("#connectWindow").append("<h3>Can't connect :-(</h3>");
 			});
 		}
@@ -98,7 +123,7 @@
 		</li>
 		<li><a href="#3a" data-toggle="tab">Delay</a>
 		</li>
-		<li><a href="#4a" data-toggle="tab">Etc</a>
+		<li><a href="#4a" data-toggle="tab">Presets</a>
 		</li>
 	</ul>
 
@@ -130,18 +155,18 @@
 			     data-min-value="100"
 			     data-buffer="10"
 			     data-target="#amount"
-			     data-marker-color="marker-big"
+			     data-marker-color="marker-big-bpm"
 			     data-accuracy="0"
 			     data-colors="red, yellow, green, blue"
 			     data-vertical="true"
-			     data-on-change="sliderChange">
+			     data-on-change="sliderChangeBPM">
 			</div>
 		</div>
 		<div class="tab-pane" id="3a" style="height: 85%; overflow: hidden !important;">
 			<div class="top-label">
 				<label for="delay" style="border:0; color:#fff;">Delay:</label>
 				<input type="text" id="delay" readonly=""
-				       style="border:0; color:#f6931f; background: transparent; font-weight:bold; width: 50px;">
+				       style="border:0; color:#4e5ff6; background: transparent; font-weight:bold; width: 50px;">
 			</div>
 			<div class="slider ani vertical centered"
 			     data-position="60"
@@ -150,15 +175,53 @@
 			     data-min-value="10"
 			     data-buffer="10"
 			     data-target="#delay"
-			     data-marker-color="marker-big"
+			     data-marker-color="marker-big-delay"
 			     data-accuracy="0"
 			     data-colors="red, yellow, green, blue"
 			     data-vertical="true"
-			     data-on-change="sliderChange">
+			     data-on-change="sliderChangeDelay">
 			</div>
 		</div>
-		<div class="tab-pane" id="4a">
-			<h3>Nothing here yet</h3>
+		<div class="tab-pane" id="4a" style="height: 85%; overflow: hidden !important;">
+			<div class="grid">
+				<div class="row cells1">
+					<div class="cell" style="align-content: center;">
+						<label class="input-control radio">
+							<input type="radio" name="presets" value="120" onclick="sliderChangeBPM(this.value);">
+							<span class="check"></span>
+							<span class="caption">120 BPM</span>
+						</label>
+					</div>
+					<div class="cell" style="align-content: center;">
+						<label class="input-control radio">
+							<input type="radio" name="presets" value="150" onclick="sliderChangeBPM(this.value);">
+							<span class="check"></span>
+							<span class="caption">150 BPM</span>
+						</label>
+					</div>
+					<div class="cell" style="align-content: center;">
+						<label class="input-control radio">
+							<input type="radio" name="presets" value="180" onclick="sliderChangeBPM(this.value);">
+							<span class="check"></span>
+							<span class="caption">180 BPM</span>
+						</label>
+					</div>
+					<div class="cell" style="align-content: center;">
+						<label class="input-control radio">
+							<input type="radio" name="presets" value="200" onclick="sliderChangeBPM(this.value);">
+							<span class="check"></span>
+							<span class="caption">200 BPM</span>
+						</label>
+					</div>
+					<div class="cell" style="align-content: center;">
+						<label class="input-control radio">
+							<input type="radio" name="presets" value="220" onclick="sliderChangeBPM(this.value);">
+							<span class="check"></span>
+							<span class="caption">220 BPM</span>
+						</label>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 

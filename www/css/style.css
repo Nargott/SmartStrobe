@@ -63,8 +63,16 @@ table {
 	display: block;
 }
 
-.marker-big {
+.marker-big-bpm {
 	background-color: #f6931f !important;
+	height: 50px !important;
+	width: 50px !important;
+	margin-top: -25px !important;
+	margin-left: -25px !important;
+}
+
+.marker-big-delay {
+	background-color: #4f69f6 !important;
 	height: 50px !important;
 	width: 50px !important;
 	margin-top: -25px !important;
