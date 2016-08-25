@@ -12,7 +12,7 @@
     <preference name="android-minSdkVersion" value="14" />
     <plugin name="cordova-plugin-console" source="npm" spec="~1.0.2" />
     <plugin name="cordova-plugin-bluetooth-serial" source="npm" spec="~0.4.5" />
-    <icon src="icon.png" />
+    <icon src="www/icon.png" />
     <platform name="android">
         <icon density="ldpi" src="www/res/icon/android/drawable-ldpi-icon.png" />
         <icon density="mdpi" src="www/res/icon/android/drawable-mdpi-icon.png" />
