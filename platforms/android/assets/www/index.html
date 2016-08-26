@@ -20,96 +20,92 @@
 	<script src="./js/metro.js"></script>
 	<script type="text/javascript" src="cordova.js"></script>
 	<script>
-		/*$(function () {
-		 $("#slider-vertical").slider({
-		 orientation: "vertical",
-		 range: "min",
-		 min: 100,
-		 max: 250,
-		 value: 120,
-		 step: 10,
-		 slide: function (event, ui) {
-		 $("#amount").val(ui.value);
-		 },
-		 stop: function (event, ui) {
-		 console.log(ui.value);
-		 }
-		 });
-		 $("#amount").val($("#slider-vertical").slider("value"));
-		 });
-		 function changeStep() {
-		 $("#isStep").is(':checked') ? $("#slider-vertical").slider({
-		 step: 5
-		 }) : $("#slider-vertical").slider({
-		 step: 1
-		 })
-		 }*/
 		var lastState = 0;
 		const MAC = "00:14:03:05:62:F7";
+		const TTL = 300;
 		var data = new Uint8Array(2);
+		var lastCommandTime = 0;
+		var date = new Date();
+		var ms = 0;
 		function sliderChangeBPM(value) {
 			if (lastState != value) {
 				data[0] = 0x01;
 				data[1] = value;
-				bluetoothSerial.write(data, function () {
-					console.log("Sucess!");
-				}, function () {
-					console.log("Error!");
-				});
-				lastState = value;
+				d = new Date();
+				ms = d.getMilliseconds();
+				if (ms - lastCommandTime > TTL) {
+					bluetoothSerial.write(data, function () {
+						console.log("Sucess!");
+					}, function () {
+						console.log("Error!");
+					});
+					lastState = value;
+				}
 			}
 		}
 		function sliderChangeDelay(value) {
 			if (lastState != value) {
 				data[0] = 0x02;
 				data[1] = value;
-				bluetoothSerial.write(data, function () {
-					console.log("Sucess!");
-				}, function () {
-					console.log("Error!");
-				});
-				lastState = value;
+				d = new Date();
+				ms = d.getMilliseconds();
+				if (ms - lastCommandTime > TTL) {
+					bluetoothSerial.write(data, function () {
+						console.log("Sucess!");
+					}, function () {
+						console.log("Error!");
+					});
+					lastState = value;
+				}
 			}
 		}
 		function toggleLight(value) {
 			data[0] = 0x00;
 			data[1] = value ? 0x01 : 0x00;
-			bluetoothSerial.write(data, function () {
-				console.log("Sucess!");
-			}, function () {
-				console.log("Error!");
-			});
+			d = new Date();
+			ms = d.getMilliseconds();
+			if (ms - lastCommandTime > TTL) {
+				bluetoothSerial.write(data, function () {
+					console.log("Sucess!");
+				}, function () {
+					console.log("Error!");
+				});
+			}
 		}
 		function connectToDevice() {
+			$("connectButton").hide();
 			bluetoothSerial.enable(
 				function () {
 					$("#connectWindow").append("<h3>Bluetooth is enabled</h3>");
+					bluetoothSerial.list(function (devices) {
+						devices.forEach(function (device) {
+							$("#connectWindow").append("<h3>" + device.id + "</h3>");
+						})
+					});
+
+					bluetoothSerial.connect(MAC, function () {
+						$("#connectWindow").append("<h3>Connected!</h3>");
+						$("#connectWindow").hide();
+						$("#mainTabs").show();
+					}, function () {
+						$("#connectWindow").append("<h3>Can't connect :-(</h3>");
+						$("connectButton").show();
+					});
 				},
 				function () {
 					$("#connectWindow").append("<h3>The user did *not* enable Bluetooth</h3>");
+					$("connectButton").show();
 				}
 			);
 
-			bluetoothSerial.list(function (devices) {
-				devices.forEach(function (device) {
-					//console.log(device.id);
-					$("#connectWindow").append("<h3>" + device.id + "</h3>");
-				})
-			});
 
-			bluetoothSerial.connect(MAC, function () {
-				$("#connectWindow").append("<h3>Connected!</h3>");
-				$("#connectWindow").hide();
-				$("#mainTabs").show();
-			}, function () {
-				$("#connectWindow").append("<h3>Can't connect :-(</h3>");
-			});
 		}
 	</script>
 </head>
 <body style="height:100%">
 <div id="connectWindow" class="connectWindow">
-	<button class="button success block-shadow-success text-shadow connectButton" onclick="connectToDevice()">
+	<button class="button success block-shadow-success text-shadow connectButton" onclick="connectToDevice()"
+				id="connectButton">
 		Connect
 	</button>
 </div>
